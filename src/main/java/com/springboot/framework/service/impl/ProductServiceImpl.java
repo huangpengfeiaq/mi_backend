@@ -99,6 +99,25 @@ public class ProductServiceImpl implements ProductService {
         return ResponseBOUtil.success(Errors.SUCCESS);
     }
 
+    @Override
+    public ResponseBO<Errors> updateByStatus(ProductDTO productDTO) {
+        //1.请求校验
+        Errors errors = validRequest(productDTO, "updateByStatus");
+        if (errors.code != 0) {
+            return ResponseBOUtil.fail(errors);
+        }
+        //2.创建entity
+        Product product = new Product();
+        product.setProductId(productDTO.getProductId());
+        product.setStatus(productDTO.getStatus());
+        product.setUpdateBy(productDTO.getUpdateBy());
+        //3.响应校验
+        if (productMapper.updateByPrimaryKeySelective(product) == 0) {
+            return ResponseBOUtil.fail("更新失败");
+        }
+        return ResponseBOUtil.success(Errors.SUCCESS);
+    }
+
     private Errors validRequest(ProductDTO recordDTO, String type) {
         Product validRequest;
         Example example = new Example(Product.class);
@@ -127,6 +146,11 @@ public class ProductServiceImpl implements ProductService {
                 validRequest = productMapper.selectOneByExample(example);
                 if (validRequest != null && !validRequest.getProductId().equals(productId)) {
                     return Errors.PRODUCT_NAME_SAME;
+                }
+                break;
+            case "updateByStatus":
+                if (productMapper.selectByPrimaryKey(recordDTO.getProductId()) == null) {
+                    return Errors.PRODUCT_NOT_FIND;
                 }
                 break;
             default:

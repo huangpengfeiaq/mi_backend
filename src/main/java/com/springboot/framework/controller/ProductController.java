@@ -74,6 +74,6 @@ public class ProductController extends BaseController {
         recordDTO.setProductId(bean.getId());
         recordDTO.setStatus(bean.getStatus());
         recordDTO.setUpdateBy(super.getSessionUser(request).getName());
-        return productService.updateByPrimaryKeySelective(recordDTO);
+        return productService.updateByStatus(recordDTO);
     }
 }

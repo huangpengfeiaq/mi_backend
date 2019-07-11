@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.springboot.framework.bo.PageResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.constant.Errors;
+import com.springboot.framework.dao.mapper.ProductMapper;
 import com.springboot.framework.dao.mapper.ProductStyleMapper;
 import com.springboot.framework.dao.pojo.ProductStyle;
 import com.springboot.framework.dto.ProductStyleDTO;
@@ -26,6 +27,9 @@ public class ProductStyleServiceImpl implements ProductStyleService {
     @Resource
     private ProductStyleMapper productStyleMapper;
 
+    @Resource
+    private ProductMapper productMapper;
+
     @Override
     public ResponseBO<Errors> deleteByPrimaryKey(ProductStyleDTO recordDTO) {
         //2.创建entity
@@ -41,10 +45,10 @@ public class ProductStyleServiceImpl implements ProductStyleService {
     @Override
     public ResponseBO<Errors> insertSelective(ProductStyleDTO recordDTO) {
         //1.请求校验
-//        Errors errors = validRequest(recordDTO, "insertSelective");
-//        if (errors.code != 0) {
-//            return ResponseBOUtil.fail(errors);
-//        }
+        Errors errors = validRequest(recordDTO, "insertSelective");
+        if (errors.code != 0) {
+            return ResponseBOUtil.fail(errors);
+        }
         //2.创建entity
         ProductStyle record = new ProductStyle(recordDTO);
         //3.响应校验
@@ -93,5 +97,36 @@ public class ProductStyleServiceImpl implements ProductStyleService {
             return ResponseBOUtil.fail("更新失败");
         }
         return ResponseBOUtil.success(Errors.SUCCESS);
+    }
+
+    private Errors validRequest(ProductStyleDTO recordDTO, String type) {
+        ProductStyle validRequest;
+        Example example = new Example(ProductStyle.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andNotEqualTo("status", -1);
+        switch (type) {
+            case "insertSelective":
+                if (productMapper.selectByPrimaryKey(recordDTO.getProductId()) == null) {
+                    return Errors.PRODUCT_CATEGORY_NOT_FIND;
+                }
+                break;
+//            case "updateByPrimaryKeySelective":
+//                Integer productId = recordDTO.getProductId();
+//                if (productMapper.selectByPrimaryKey(productId) == null) {
+//                    return Errors.PRODUCT_NOT_FIND;
+//                }
+//                if (productCategoryMapper.selectByPrimaryKey(recordDTO.getCategoryId()) == null) {
+//                    return Errors.PRODUCT_CATEGORY_NOT_FIND;
+//                }
+//                criteria.andEqualTo("productName", recordDTO.getProductName());
+//                validRequest = productMapper.selectOneByExample(example);
+//                if (validRequest != null && !validRequest.getProductId().equals(productId)) {
+//                    return Errors.PRODUCT_NAME_SAME;
+//                }
+//                break;
+            default:
+                return Errors.SUCCESS;
+        }
+        return Errors.SUCCESS;
     }
 }

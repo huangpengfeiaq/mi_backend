@@ -59,4 +59,12 @@ public interface ProductService {
      * @return ResponseBO<Errors>
      */
     ResponseBO<Errors> updateByPrimaryKeySelective(ProductDTO productDTO);
+
+    /**
+     * 更新（状态）
+     *
+     * @param productDTO 商品传输对象
+     * @return ResponseBO<Errors>
+     */
+    ResponseBO<Errors> updateByStatus(ProductDTO productDTO);
 }
