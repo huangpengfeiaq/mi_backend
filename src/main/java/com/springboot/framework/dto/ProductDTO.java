@@ -15,6 +15,10 @@ public class ProductDTO {
      */
     private Integer categoryId;
     /**
+     * 商品品类名称
+     */
+    private String categoryName;
+    /**
      * 商品封面图
      */
     private String productCover;

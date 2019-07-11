@@ -10,25 +10,43 @@ import java.util.Date;
 @Data
 @Table(name = "product_master")
 public class Product {
-    //商品编号
+    /**
+     * 商品编号
+     */
     @Id
     private Integer productId;
-    //商品品类编号
+    /**
+     * 商品品类编号
+     */
     private Integer categoryId;
-    //商品封面图
+    /**
+     * 商品品类名称
+     */
+    private String categoryName;
+    /**
+     * 商品封面图
+     */
     private String productCover;
-    //商品名称
+    /**
+     * 商品名称
+     */
     private String productName;
-    //商品促销语
+    /**
+     * 商品促销语
+     */
     private String productPromotion;
-    //商品简介
+    /**
+     * 商品简介
+     */
     private String productIntroduction;
     private String createBy;
     private Date createDate;
     private String updateBy;
     private Date updateDate;
     private Byte status;
-    //商品内容（临时）
+    /**
+     * 商品内容（临时）
+     */
     private String productArticleContent;
 
     public String getProductArticleContent() {

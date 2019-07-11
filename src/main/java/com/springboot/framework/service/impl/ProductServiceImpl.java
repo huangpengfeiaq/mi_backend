@@ -47,6 +47,8 @@ public class ProductServiceImpl implements ProductService {
         }
         //2.创建entity
         Product record = new Product(recordDTO);
+        //TODO 有待商榷代码⬇⬇⬇
+        record.setCategoryName(productCategoryMapper.selectByPrimaryKey(recordDTO.getCategoryId()).getCategoryName());
         //3.响应校验
         if (productMapper.insertSelective(record) == 0) {
             return ResponseBOUtil.fail("添加失败");
@@ -82,14 +84,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseBO<Errors> updateByPrimaryKeySelective(ProductDTO recordDTO) {
         //1.请求校验
-//        Errors errors = validRequest(recordDTO, "updateByPrimaryKeySelective");
-//        if (errors.code != 0) {
-//            return ResponseBOUtil.fail(errors);
-//        }
+        Errors errors = validRequest(recordDTO, "updateByPrimaryKeySelective");
+        if (errors.code != 0) {
+            return ResponseBOUtil.fail(errors);
+        }
         //2.创建entity
-        Product admin = new Product(recordDTO);
+        Product record = new Product(recordDTO);
+        //TODO 有待商榷代码⬇⬇⬇
+        record.setCategoryName(productCategoryMapper.selectByPrimaryKey(recordDTO.getCategoryId()).getCategoryName());
         //3.响应校验
-        if (productMapper.updateByPrimaryKeySelective(admin) == 0) {
+        if (productMapper.updateByPrimaryKeySelective(record) == 0) {
             return ResponseBOUtil.fail("更新失败");
         }
         return ResponseBOUtil.success(Errors.SUCCESS);
@@ -107,19 +111,24 @@ public class ProductServiceImpl implements ProductService {
                 if (validRequest != null) {
                     return Errors.PRODUCT_NAME_SAME;
                 }
-                ProductCategory productCategory = new ProductCategory();
-                productCategory.setCategoryId(recordDTO.getCategoryId());
-                if (productCategoryMapper.selectOne(productCategory) == null) {
+                if (productCategoryMapper.selectByPrimaryKey(recordDTO.getCategoryId()) == null) {
                     return Errors.PRODUCT_CATEGORY_NOT_FIND;
                 }
                 break;
-//            case "updateByPrimaryKeySelective":
-//                criteria.andEqualTo("phone", recordDTO.getPhone());
-//                validRequest = adminMapper.selectOneByExample(example);
-//                if (validRequest != null && !validRequest.getId().equals(recordDTO.getId())) {
-//                    return Errors.USER_MOBILE_EXISTS;
-//                }
-//                break;
+            case "updateByPrimaryKeySelective":
+                Integer productId = recordDTO.getProductId();
+                if (productMapper.selectByPrimaryKey(productId) == null) {
+                    return Errors.PRODUCT_NOT_FIND;
+                }
+                if (productCategoryMapper.selectByPrimaryKey(recordDTO.getCategoryId()) == null) {
+                    return Errors.PRODUCT_CATEGORY_NOT_FIND;
+                }
+                criteria.andEqualTo("productName", recordDTO.getProductName());
+                validRequest = productMapper.selectOneByExample(example);
+                if (validRequest != null && !validRequest.getProductId().equals(productId)) {
+                    return Errors.PRODUCT_NAME_SAME;
+                }
+                break;
             default:
                 return Errors.SUCCESS;
         }

@@ -75,6 +75,7 @@ public enum Errors {
 
     // 商品模块
     PRODUCT_NAME_SAME(220, "该商品名称已经存在"),
+    PRODUCT_NOT_FIND(221, "该商品不存在"),
 
 
     //商品品类模块
