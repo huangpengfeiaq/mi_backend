@@ -150,12 +150,12 @@ public class UserServiceImpl implements UserService {
         criteria.andNotEqualTo("status", -1);
         switch (type) {
             case "insertSelective":
-                criteria.andEqualTo("phone", recordDTO.getUserPhone());
+                criteria.andEqualTo("userPhone", recordDTO.getUserPhone());
                 validRequest = userMapper.selectOneByExample(example);
                 if (validRequest != null) {
                     return Errors.USER_MOBILE_EXISTS;
                 }
-                criteria.orEqualTo("account", recordDTO.getUserAccount());
+                criteria.orEqualTo("userAccount", recordDTO.getUserAccount());
                 validRequest = userMapper.selectOneByExample(example);
                 if (validRequest != null) {
                     return Errors.USER_USERNAME_SAME;
@@ -167,10 +167,12 @@ public class UserServiceImpl implements UserService {
                 }
                 break;
             case "updateByPrimaryKeySelective":
-                criteria.andEqualTo("phone", recordDTO.getUserPhone());
-                validRequest = userMapper.selectOneByExample(example);
-                if (validRequest != null && !validRequest.getUserId().equals(recordDTO.getUserId())) {
-                    return Errors.USER_MOBILE_EXISTS;
+                if (!StringUtil.isEmpty(recordDTO.getUserPhone())) {
+                    criteria.andEqualTo("userPhone", recordDTO.getUserPhone());
+                    validRequest = userMapper.selectOneByExample(example);
+                    if (validRequest != null && !validRequest.getUserId().equals(recordDTO.getUserId())) {
+                        return Errors.USER_MOBILE_EXISTS;
+                    }
                 }
                 break;
             default:

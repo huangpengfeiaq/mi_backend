@@ -31,9 +31,8 @@ import java.util.Random;
 public class CommonController {
     @Resource
     private RedisUtil redisUtil;
-
-//    @Resource
-//    private AppConfig appConfig;
+    @Resource
+    private AppConfig appConfig;
 
 //    /**
 //     * 发送验证码
@@ -90,7 +89,7 @@ public class CommonController {
 
         // 5将验证码信息保存到Session中
         // request.getSession().setAttribute(Const.VERIFY_CODE, str);
-        redisUtil.set(Const.VERIFY_CODE, str, 600);
+        redisUtil.set(appConfig.getAppName() + "_" + appConfig.getEnv() + "_" + Const.VERIFY_CODE, str, 600);
 
         System.out.println("verifyCode:---------------" + str);
         // 6使用ImageIO输出图片

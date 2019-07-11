@@ -47,7 +47,8 @@ public class UserController extends BaseController {
         return userService.deleteByPrimaryKey(recordDTO);
     }
 
-    @ApiOperation(value = "新增", notes = "")
+    @ACS(allowAnonymous = true)
+    @ApiOperation(value = "新增/注册", notes = "")
     @PostMapping(value = "insertSelective")
     public ResponseBO<Errors> insertSelective(@RequestBody UserInsert bean, HttpServletRequest request) {
         UserDTO recordDTO = new UserDTO(bean.getUserIcon(), bean.getUserName(), bean.getUserSex(), bean.getUserBirthday(), bean.getUserAchievement(), bean.getUserAccount(), bean.getUserPassword(), bean.getUserPhone(), bean.getUserWechatOpenid(), super.getSessionUser(request).getName());

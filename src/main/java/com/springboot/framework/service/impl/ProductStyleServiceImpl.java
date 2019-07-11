@@ -1,6 +1,7 @@
 package com.springboot.framework.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.springboot.framework.bo.PageResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.constant.Errors;
@@ -11,10 +12,12 @@ import com.springboot.framework.dto.ProductStyleDTO;
 import com.springboot.framework.service.ProductStyleService;
 import com.springboot.framework.util.PageUtil;
 import com.springboot.framework.util.ResponseBOUtil;
+import com.springboot.framework.vo.ProductStyleVO;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +29,6 @@ import java.util.List;
 public class ProductStyleServiceImpl implements ProductStyleService {
     @Resource
     private ProductStyleMapper productStyleMapper;
-
     @Resource
     private ProductMapper productMapper;
 
@@ -72,8 +74,14 @@ public class ProductStyleServiceImpl implements ProductStyleService {
         criteria.andNotEqualTo("status", -1);
         example.orderBy("createDate").desc();
 
-        List<ProductStyle> adminList = productStyleMapper.selectByExample(example);
-        return PageUtil.page(adminList);
+        List<ProductStyle> productStyleList = productStyleMapper.selectByExample(example);
+        List<ProductStyleVO> productStyleVOList = Lists.newArrayList();
+        for (ProductStyle productStyle : productStyleList) {
+            ProductStyleVO productStyleVO = new ProductStyleVO(productStyle, productMapper.selectByPrimaryKey(productStyle.getProductId()).getProductName());
+            productStyleVOList.add(productStyleVO);
+        }
+
+        return PageUtil.page(productStyleList, productStyleVOList);
     }
 
     @Override

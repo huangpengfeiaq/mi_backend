@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
+ * 缓存业务
+ *
  * @author haungpengfei
  * @version 1.0.0326
  * @date 2019年3月26日
- * @Description: 缓存业务
  */
 @Service
 public class RedisServiceImpl implements RedisService {

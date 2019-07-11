@@ -58,10 +58,10 @@ public class AdminController extends BaseController {
         if (bindingResult.hasErrors()) {
             throw new RuntimeException(bindingResult.getFieldError().getDefaultMessage());
         }
-//        Boolean flag = verifyCode(bean.getVerifyCode());
-//        if (!flag) {
-//            return ResponseBOUtil.fail("验证码错误");
-//        }
+        Boolean flag = verifyCode(bean.getVerifyCode());
+        if (!flag) {
+            return ResponseBOUtil.fail("验证码错误");
+        }
         AdminDTO recordDTO = new AdminDTO(bean.getLoginKey(), bean.getLoginPwd());
         ResponseBO<Admin> response = adminService.login(recordDTO);
         if (response.isSuccess()) {

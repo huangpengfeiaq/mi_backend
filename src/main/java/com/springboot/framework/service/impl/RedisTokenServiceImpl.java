@@ -1,6 +1,7 @@
 package com.springboot.framework.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.springboot.framework.config.AppConfig;
 import com.springboot.framework.constant.Const;
 import com.springboot.framework.service.RedisTokenService;
 import com.springboot.framework.util.RedisUtil;
@@ -22,14 +23,16 @@ import javax.servlet.http.HttpServletRequest;
 public class RedisTokenServiceImpl implements RedisTokenService {
     @Resource
     private RedisUtil redisUtils;
+    @Resource
+    private AppConfig appConfig;
 
     /**
      * 创建token
      */
     @Override
     public String getToken(UserBO userBOInfo) {
-        //1.使用adminId作为源token
-        String adminId = Const.SERVER_USER_KEY + userBOInfo.getId();
+        //1.使用（应用名称+应用环境+adminId）作为源token
+        String adminId = appConfig.getAppName() + "_" + appConfig.getEnv() + "_" + Const.SERVER_USER_KEY + userBOInfo.getId();
         //2.使用uuid作为源token
 //        String token = UUID.randomUUID().toString().replace("-", "");
         String token = userBOInfo.getAccessToken();
