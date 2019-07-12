@@ -75,6 +75,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public PageResponseBO selectListByCategoryId(Integer categoryId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        Example example = new Example(Product.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andNotEqualTo("status", -1);
+        criteria.andEqualTo("categoryId", categoryId);
+        example.orderBy("createDate").desc();
+
+        List<Product> adminList = productMapper.selectByExample(example);
+        return PageUtil.page(adminList);
+    }
+
+    @Override
     public ResponseBO<Integer> selectCount() {
         Product record = new Product();
         record.setStatus((byte) 1);

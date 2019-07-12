@@ -85,6 +85,26 @@ public class ProductStyleServiceImpl implements ProductStyleService {
     }
 
     @Override
+    public PageResponseBO selectListByProductId(Integer productId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        Example example = new Example(ProductStyle.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andNotEqualTo("status", -1);
+        criteria.andEqualTo("productId", productId);
+        example.orderBy("createDate").desc();
+
+        List<ProductStyle> productStyleList = productStyleMapper.selectByExample(example);
+        List<ProductStyleVO> productStyleVOList = Lists.newArrayList();
+        for (ProductStyle productStyle : productStyleList) {
+            ProductStyleVO productStyleVO = new ProductStyleVO(productStyle, productMapper.selectByPrimaryKey(productStyle.getProductId()).getProductName());
+            productStyleVOList.add(productStyleVO);
+        }
+
+        return PageUtil.page(productStyleList, productStyleVOList);
+    }
+
+    @Override
     public ResponseBO<Integer> selectCount() {
         ProductStyle record = new ProductStyle();
         record.setStatus((byte) 1);

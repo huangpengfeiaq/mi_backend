@@ -46,6 +46,16 @@ public interface ProductStyleService {
     PageResponseBO selectList(Integer pageNum, Integer pageSize);
 
     /**
+     * 列表查询（根据商品Id查询）
+     *
+     * @param productId 商品Id
+     * @param pageNum   页码
+     * @param pageSize  页面大小
+     * @return PageResponseBO
+     */
+    PageResponseBO selectListByProductId(Integer productId, Integer pageNum, Integer pageSize);
+
+    /**
      * 总数查询
      *
      * @return ResponseBO<Integer>

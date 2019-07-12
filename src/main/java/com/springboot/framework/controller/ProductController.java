@@ -54,6 +54,12 @@ public class ProductController extends BaseController {
         return productService.selectList(pageNum, pageSize);
     }
 
+    @ApiOperation(value = "查看列表（根据商品品类Id查询）", notes = "")
+    @GetMapping(value = "selectListByCategoryId")
+    public PageResponseBO selectListByCategoryId(@RequestParam Integer categoryId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        return productService.selectListByCategoryId(categoryId, pageNum, pageSize);
+    }
+
     @ApiOperation(value = "查看总数", notes = "")
     @GetMapping(value = "selectCount")
     public ResponseBO<Integer> selectCount() {
