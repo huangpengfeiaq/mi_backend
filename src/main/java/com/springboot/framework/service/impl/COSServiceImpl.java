@@ -71,6 +71,7 @@ public class COSServiceImpl implements COSService {
         try {
             uploadClient.putObject(cosConfig.getBucketName(), filePathName, file.getInputStream(), meta);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("COS storage error", e);
             ExceptionUtil.throwException(Errors.SYSTEM_CUSTOM_ERROR.code, "COS storage exception");
         }

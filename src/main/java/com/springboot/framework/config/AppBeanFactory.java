@@ -60,7 +60,7 @@ public class AppBeanFactory {
      */
     @Bean(name = "uploadClient")
     public COSClient uploadClient() {
-        return getCOSClient("ap-shanghai");
+        return getCOSClient(cosConfig.getUploadEndpoint());
     }
 
 

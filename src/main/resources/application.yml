@@ -49,7 +49,7 @@ app:
 cos:
   secretId: AKIDg7NPRE49NNAhixxhBmCVgjbHIDsEuI3b
   secretKey: hBhhT2qVtFVt2vZqFXgllX4PZP6e2Mas
-  upload-endpoint: cos.ap-shanghai.myqcloud.com
+  upload-endpoint: https://cos.ap-shanghai.myqcloud.com
   download-endpoint: https://mi-1259640766.cos.ap-shanghai.myqcloud.com
   bucketName:  mi-1259640766
   # 下载地址的有效时长，单位为ms，默认为半小时
