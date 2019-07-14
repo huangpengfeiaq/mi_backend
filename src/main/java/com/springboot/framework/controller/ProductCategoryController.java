@@ -1,5 +1,6 @@
 package com.springboot.framework.controller;
 
+import com.springboot.framework.annotation.ACS;
 import com.springboot.framework.bo.PageResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.constant.Errors;
@@ -48,12 +49,14 @@ public class ProductCategoryController extends BaseController {
         return productCategoryService.insertSelective(productCategoryDTO);
     }
 
+    @ACS(allowAnonymous = true)
     @ApiOperation(value = "查看", notes = "")
     @GetMapping(value = "selectByPrimaryKey")
     public ResponseBO<ProductCategory> selectByPrimaryKey(@RequestParam Integer id) {
         return productCategoryService.selectByPrimaryKey(id);
     }
 
+    @ACS(allowAnonymous = true)
     @ApiOperation(value = "查看列表", notes = "")
     @GetMapping(value = "selectList")
     public PageResponseBO selectList(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {

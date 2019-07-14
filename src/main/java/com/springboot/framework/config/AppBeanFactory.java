@@ -24,12 +24,6 @@ public class AppBeanFactory {
     @Resource
     private COSConfig cosConfig;
 
-//    private static COSClient cosClient = null;
-//    public static COSClient getCOSClient() {
-//        if (cosClient == null) {
-//        }
-//    }
-
     private COSClient getCOSClient(String endpoint) {
         // 1 初始化用户身份信息（secretId, secretKey）。
         String secretId = cosConfig.getSecretId();
