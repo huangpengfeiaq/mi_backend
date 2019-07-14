@@ -11,15 +11,15 @@ import java.util.Map;
  * @version 1.0
  * @date 2019/7/13 23:46
  */
-public class OSSContentTypeUtil {
+public class FileContentTypeUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(OSSContentTypeUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(FileContentTypeUtil.class);
 
     private static Map<String, String> map = null;
 
     public static void init(String propertieFilePath) {
         try {
-            OSSContentTypeUtil.map = FileUtil.loadFileProperties(propertieFilePath);
+            FileContentTypeUtil.map = FileUtil.loadFileProperties(propertieFilePath);
         } catch (IOException e) {
             logger.error("", e);
         }

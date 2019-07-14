@@ -10,7 +10,7 @@ import com.springboot.framework.constant.Errors;
 import com.springboot.framework.service.COSService;
 import com.springboot.framework.util.ExceptionUtil;
 import com.springboot.framework.util.FileUtil;
-import com.springboot.framework.util.OSSContentTypeUtil;
+import com.springboot.framework.util.FileContentTypeUtil;
 import com.springboot.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class COSServiceImpl implements COSService {
     public String upload(MultipartFile file) {
         String originFileName = file.getOriginalFilename();
         String suffixName = originFileName.substring(originFileName.indexOf(".") + 1);
-        String fileType = OSSContentTypeUtil.getContentType(suffixName);
+        String fileType = FileContentTypeUtil.getContentType(suffixName);
         // 设置文件名
         String filePathName = generateRelativeStoragePath(suffixName);
         byte[] fileContent = null;
@@ -130,7 +130,7 @@ public class COSServiceImpl implements COSService {
         try {
             String originFileName = file.getName();
             String suffixName = originFileName.substring(originFileName.indexOf(".") + 1);
-            String fileType = OSSContentTypeUtil.getContentType(suffixName);
+            String fileType = FileContentTypeUtil.getContentType(suffixName);
             // String fileType = "application/octet-stream";
             // 设置文件名
             String filePathName = generateRelativeStoragePath(suffixName);
