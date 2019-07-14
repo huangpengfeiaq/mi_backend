@@ -8,12 +8,22 @@ import java.util.Date;
 
 @Data
 public class ProductCategory {
-    //商品品类编号
+    /**
+     * 商品品类编号
+     */
     @Id
     private Integer categoryId;
-    //商品品类名称
+    /**
+     * 商品品类名称
+     */
     private String categoryName;
-    //商品品类序号
+    /**
+     * 商品品类广告图
+     */
+    private String categoryCover;
+    /**
+     * 商品品类序号
+     */
     private Integer categorySort;
     private String createBy;
     private Date createDate;
@@ -28,6 +38,7 @@ public class ProductCategory {
         this.categoryId = productCategoryDTO.getCategoryId();
         this.categoryName = productCategoryDTO.getCategoryName();
         this.categorySort = productCategoryDTO.getCategorySort();
+        this.categoryCover = productCategoryDTO.getCategoryCover();
         this.createBy = productCategoryDTO.getCreateBy();
         this.createDate = productCategoryDTO.getCreateDate();
         this.updateBy = productCategoryDTO.getUpdateBy();

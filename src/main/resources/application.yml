@@ -47,11 +47,11 @@ app:
 
 # 对象存储配置
 cos:
-  secretId: AKIDg7NPRE49NNAhixxhBmCVgjbHIDsEuI3b
-  secretKey: hBhhT2qVtFVt2vZqFXgllX4PZP6e2Mas
-  upload-endpoint: https://cos.ap-shanghai.myqcloud.com
+  secretId: AKIDWjhU1HH3bhXy82E3f4tUptgBfBXfpzc2
+  secretKey: NXUCf1FEm8PTIK50jDX0EEyRebHhtrZ2
+  upload-endpoint: ap-shanghai
   download-endpoint: https://mi-1259640766.cos.ap-shanghai.myqcloud.com
-  bucketName:  mi-1259640766
+  bucketName: mi-1259640766
   # 下载地址的有效时长，单位为ms，默认为半小时
   download-url-expiration: 1800000
   #样式

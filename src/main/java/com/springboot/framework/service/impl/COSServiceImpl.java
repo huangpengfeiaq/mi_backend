@@ -56,24 +56,26 @@ public class COSServiceImpl implements COSService {
             fileContent = file.getBytes();
         } catch (Exception e) {
             logger.error("Cannot get file content from {}.", originFileName);
-            // ExceptionUtil.throwException(Errors.SYSTEM_CUSTOM_ERROR.code, "不能读取" + originFileName + "内容");
+            ExceptionUtil.throwException(Errors.SYSTEM_CUSTOM_ERROR.code, "不能读取" + originFileName + "内容");
         }
-        ObjectMetadata meta = new ObjectMetadata();
+        ObjectMetadata metadata = new ObjectMetadata();
         // 设置上传文件长度
-        meta.setContentLength(file.getSize());
+        metadata.setContentLength(file.getSize());
 
-        // 设置上传MD5校验
-        String md5 = BinaryUtil.toBase64String(BinaryUtil.calculateMd5(fileContent));
-        meta.setContentMD5(md5);
-        meta.setContentType(fileType);
+//        // 设置上传MD5校验
+//        String md5 = BinaryUtil.toBase64String(BinaryUtil.calculateMd5(fileContent));
+//        metadata.setContentMD5(md5);
+//        metadata.setContentType(fileType);
 
         // 存储
         try {
-            uploadClient.putObject(cosConfig.getBucketName(), filePathName, file.getInputStream(), meta);
+            uploadClient.putObject(cosConfig.getBucketName(), filePathName, file.getInputStream(), metadata);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("COS storage error", e);
             ExceptionUtil.throwException(Errors.SYSTEM_CUSTOM_ERROR.code, "COS storage exception");
+        } finally {
+            uploadClient.shutdown();
         }
 //        String path = cosConfig.getDownloadEndpoint() + FileUtil.getFileSeparator() + filePathName;
         String path = cosConfig.getDownloadEndpoint() + "/" + filePathName;
@@ -171,8 +173,8 @@ public class COSServiceImpl implements COSService {
         InputStream is = null;
         try {
             String key = url.split(cosConfig.getDownloadEndpoint() + "/")[1];
-            COSObject bosObject = downloadClient.getObject(cosConfig.getBucketName(), key);
-            is = bosObject.getObjectContent();
+            COSObject object = downloadClient.getObject(cosConfig.getBucketName(), key);
+            is = object.getObjectContent();
             byte[] data = IOUtils.readStreamAsByteArray(is);
             return data;
         } catch (Exception e) {

@@ -31,17 +31,21 @@ public class ProductCategoryController extends BaseController {
     @ApiOperation(value = "删除", notes = "")
     @DeleteMapping(value = "deleteByPrimaryKey")
     public ResponseBO<Errors> deleteByPrimaryKey(@RequestParam Integer id, HttpServletRequest request) {
-        ProductCategoryDTO recordDTO = new ProductCategoryDTO();
-        recordDTO.setCategoryId(id);
-        recordDTO.setUpdateBy(super.getSessionUser(request).getName());
-        return productCategoryService.deleteByPrimaryKey(recordDTO);
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
+        productCategoryDTO.setCategoryId(id);
+        productCategoryDTO.setUpdateBy(super.getSessionUser(request).getName());
+        return productCategoryService.deleteByPrimaryKey(productCategoryDTO);
     }
 
     @ApiOperation(value = "新增", notes = "")
     @PostMapping(value = "insertSelective")
     public ResponseBO<Errors> insertSelective(@RequestBody ProductCategoryInsert bean, HttpServletRequest request) {
-        ProductCategoryDTO recordDTO = new ProductCategoryDTO(bean.getCategoryName(), bean.getCategorySort(), super.getSessionUser(request).getName());
-        return productCategoryService.insertSelective(recordDTO);
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
+        productCategoryDTO.setCategoryName(bean.getCategoryName());
+        productCategoryDTO.setCategorySort(bean.getCategorySort());
+        productCategoryDTO.setCategoryCover(bean.getCategoryCover());
+        productCategoryDTO.setCreateBy(super.getSessionUser(request).getName());
+        return productCategoryService.insertSelective(productCategoryDTO);
     }
 
     @ApiOperation(value = "查看", notes = "")
@@ -65,17 +69,22 @@ public class ProductCategoryController extends BaseController {
     @ApiOperation(value = "更新", notes = "")
     @PutMapping(value = "updateByPrimaryKeySelective")
     public ResponseBO<Errors> updateByPrimaryKeySelective(@RequestBody ProductCategoryUpdateByPrimaryKey bean, HttpServletRequest request) {
-        ProductCategoryDTO recordDTO = new ProductCategoryDTO(bean.getCategoryId(), bean.getCategoryName(), bean.getCategorySort(), super.getSessionUser(request).getName());
-        return productCategoryService.updateByPrimaryKeySelective(recordDTO);
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
+        productCategoryDTO.setCategoryId(bean.getCategoryId());
+        productCategoryDTO.setCategoryName(bean.getCategoryName());
+        productCategoryDTO.setCategorySort(bean.getCategorySort());
+        productCategoryDTO.setCategoryCover(bean.getCategoryCover());
+        productCategoryDTO.setUpdateBy(super.getSessionUser(request).getName());
+        return productCategoryService.updateByPrimaryKeySelective(productCategoryDTO);
     }
 
     @ApiOperation(value = "更新状态", notes = "")
     @PutMapping(value = "updateByStatus")
     public ResponseBO<Errors> updateByStatus(@RequestBody UpdateByStatus bean, HttpServletRequest request) {
-        ProductCategoryDTO recordDTO = new ProductCategoryDTO();
-        recordDTO.setCategoryId(bean.getId());
-        recordDTO.setStatus(bean.getStatus());
-        recordDTO.setUpdateBy(super.getSessionUser(request).getName());
-        return productCategoryService.updateByPrimaryKeySelective(recordDTO);
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
+        productCategoryDTO.setCategoryId(bean.getId());
+        productCategoryDTO.setStatus(bean.getStatus());
+        productCategoryDTO.setUpdateBy(super.getSessionUser(request).getName());
+        return productCategoryService.updateByPrimaryKeySelective(productCategoryDTO);
     }
 }

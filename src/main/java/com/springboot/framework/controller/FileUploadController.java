@@ -1,5 +1,6 @@
 package com.springboot.framework.controller;
 
+import com.springboot.framework.annotation.ACS;
 import com.springboot.framework.bo.ImgUploadResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.service.COSService;
@@ -35,14 +36,15 @@ public class FileUploadController {
      * 上传图片
      * @param file 图片
      * @param request http请求
-     * @return String
+     * @return ResponseBO<String>
      * @throws IOException
      */
+    @ACS(allowAnonymous = true)
     @ApiOperation(value = "上传图片", notes = "上传图片<br/>http://aligreen.alibaba.com/porn.html,在此检测rate超过80的为涉黄图片，会上传失败")
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST)
-    public String uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+    public ResponseBO<String> uploadImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
         // 尺寸验证
-        return cosService.upload(file);
+        return ResponseBOUtil.success(cosService.upload(file));
     }
 
     /**
