@@ -77,11 +77,14 @@ public enum Errors {
     PRODUCT_NAME_SAME(220, "该商品名称已经存在"),
     PRODUCT_NOT_FIND(221, "该商品不存在"),
 
+    PRODUCT_STYLE_NOT_FIND(250, "该商品款式不存在"),
 
     //商品品类模块
     PRODUCT_CATEGORY_NOT_FIND(300, "该商品品类不存在"),
 
 
+    //用户购物车模块
+    USER_CART_SAME(400, "该商品已经在购物车存在"),
 
 
     // 600 - 630 为收货地址
