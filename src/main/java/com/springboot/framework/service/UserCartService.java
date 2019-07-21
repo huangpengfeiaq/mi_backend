@@ -46,6 +46,16 @@ public interface UserCartService {
     PageResponseBO selectList(Integer pageNum, Integer pageSize);
 
     /**
+     * 列表查询(根据用户id)
+     *
+     * @param pageNum  页码
+     * @param pageSize 页面大小
+     * @param userId 用户id
+     * @return PageResponseBO
+     */
+    PageResponseBO selectListByUserId(Integer userId,Integer pageNum, Integer pageSize);
+
+    /**
      * 总数查询
      *
      * @return ResponseBO<Integer>

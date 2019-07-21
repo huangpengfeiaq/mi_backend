@@ -2,6 +2,8 @@ package com.springboot.framework.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @author huangpengfei
  * @version 1.0
@@ -12,27 +14,15 @@ public class ProductVO {
     /**
      * 商品编号
      */
-    private Integer productId;
-    /**
-     * 商品品类编号
-     */
-    private Integer categoryId;
-    /**
-     * 商品品类名称
-     */
-    private String categoryName;
-    /**
-     * 商品封面图
-     */
-    private String productCover;
+    private Integer id;
     /**
      * 商品名称
      */
-    private String productName;
+    private String name;
     /**
-     * 商品促销语
+     * 商品价格
      */
-    private String productPromotion;
+    private BigDecimal price;
     /**
      * 商品简介
      */

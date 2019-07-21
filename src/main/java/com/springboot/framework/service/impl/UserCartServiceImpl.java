@@ -1,18 +1,22 @@
 package com.springboot.framework.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.springboot.framework.bo.PageResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.constant.Errors;
+import com.springboot.framework.dao.mapper.ProductMapper;
 import com.springboot.framework.dao.mapper.ProductStyleMapper;
 import com.springboot.framework.dao.mapper.UserCartMapper;
 import com.springboot.framework.dao.mapper.UserMapper;
+import com.springboot.framework.dao.pojo.ProductStyle;
 import com.springboot.framework.dao.pojo.UserCart;
 import com.springboot.framework.dto.UserCartDTO;
 import com.springboot.framework.service.UserCartService;
 import com.springboot.framework.util.PageUtil;
 import com.springboot.framework.util.ResponseBOUtil;
 import com.springboot.framework.util.StringUtil;
+import com.springboot.framework.vo.UserCartVO;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -31,6 +35,8 @@ public class UserCartServiceImpl implements UserCartService {
     @Resource
     private UserMapper userMapper;
     @Resource
+    private ProductMapper productMapper;
+    @Resource
     private ProductStyleMapper productStyleMapper;
 
     @Override
@@ -48,15 +54,30 @@ public class UserCartServiceImpl implements UserCartService {
     @Override
     public ResponseBO<Errors> insertSelective(UserCartDTO recordDTO) {
         //1.请求校验
-        Errors errors = validRequest(recordDTO, "insertSelective");
-        if (errors.code != 0) {
-            return ResponseBOUtil.fail(errors);
+        Integer styleId = recordDTO.getStyleId();
+        Integer userId = recordDTO.getUserId();
+        if (userMapper.selectByPrimaryKey(userId) == null) {
+            return ResponseBOUtil.fail(Errors.USER_NOT_FIND);
+        }
+        if (productStyleMapper.selectByPrimaryKey(styleId) == null) {
+            return ResponseBOUtil.fail(Errors.PRODUCT_STYLE_NOT_FIND);
         }
         //2.创建entity
-        UserCart record = new UserCart(recordDTO);
-        //3.响应校验
-        if (userCartMapper.insertSelective(record) == 0) {
-            return ResponseBOUtil.fail("添加失败");
+        UserCart userCart = new UserCart();
+        //分类讨论：1.存在即更新（数量加一）
+        userCart.setStyleId(styleId);
+        userCart.setUserId(userId);
+        userCart = userCartMapper.selectOne(userCart);
+        if (userCart != null) {
+            if (userCartMapper.updateByCartNumber(userCart.getCartId(), recordDTO.getCartNumber()) == 0) {
+                return ResponseBOUtil.fail("数量增加失败");
+            }
+        } else {
+            //分类讨论：2.不存在即新增
+            userCart = new UserCart(recordDTO);
+            if (userCartMapper.insertSelective(userCart) == 0) {
+                return ResponseBOUtil.fail("添加失败");
+            }
         }
         return ResponseBOUtil.success(Errors.SUCCESS);
     }
@@ -75,8 +96,30 @@ public class UserCartServiceImpl implements UserCartService {
         criteria.andNotEqualTo("status", -1);
         example.orderBy("createDate").desc();
 
-        List<UserCart> adminList = userCartMapper.selectByExample(example);
-        return PageUtil.page(adminList);
+        List<UserCart> userCartList = userCartMapper.selectByExample(example);
+        return PageUtil.page(userCartList);
+    }
+
+    @Override
+    public PageResponseBO selectListByUserId(Integer userId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+
+        Example example = new Example(UserCart.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        criteria.andNotEqualTo("status", -1);
+        example.orderBy("createDate").desc();
+
+        List<UserCart> userCartList = userCartMapper.selectByExample(example);
+
+        List<UserCartVO> userCartVOList = Lists.newArrayList();
+
+        for (UserCart userCart : userCartList) {
+            ProductStyle productStyle = productStyleMapper.selectByPrimaryKey(userCart.getStyleId());
+            UserCartVO userCartVO = new UserCartVO(userCart, productStyle, productMapper.selectByPrimaryKey(productStyle.getProductId()).getProductName());
+            userCartVOList.add(userCartVO);
+        }
+        return PageUtil.page(userCartList, userCartVOList);
     }
 
     @Override
@@ -100,41 +143,5 @@ public class UserCartServiceImpl implements UserCartService {
             return ResponseBOUtil.fail("更新失败");
         }
         return ResponseBOUtil.success(Errors.SUCCESS);
-    }
-
-    private Errors validRequest(UserCartDTO recordDTO, String type) {
-        UserCart validRequest;
-        Example example = new Example(UserCart.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andNotEqualTo("status", -1);
-        switch (type) {
-            case "insertSelective":
-                Integer styleId = recordDTO.getStyleId();
-                Integer userId = recordDTO.getUserId();
-                if (userMapper.selectByPrimaryKey(userId) == null) {
-                    return Errors.USER_NOT_FIND;
-                }
-                if (productStyleMapper.selectByPrimaryKey(styleId) == null) {
-                    return Errors.PRODUCT_STYLE_NOT_FIND;
-                }
-                criteria.andEqualTo("styleId", styleId);
-                criteria.andEqualTo("userId", userId);
-                if (userCartMapper.selectOneByExample(example) != null) {
-                    return Errors.USER_CART_SAME;
-                }
-                break;
-//            case "updateByPrimaryKeySelective":
-//                if (!StringUtil.isEmpty(recordDTO.getUserPhone())) {
-//                    criteria.andEqualTo("userPhone", recordDTO.getUserPhone());
-//                    validRequest = userMapper.selectOneByExample(example);
-//                    if (validRequest != null && !validRequest.getUserId().equals(recordDTO.getUserId())) {
-//                        return Errors.USER_MOBILE_EXISTS;
-//                    }
-//                }
-//                break;
-            default:
-                return Errors.SUCCESS;
-        }
-        return Errors.SUCCESS;
     }
 }

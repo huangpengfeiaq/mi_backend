@@ -10,6 +10,7 @@ import com.springboot.framework.controller.request.UpdateByStatus;
 import com.springboot.framework.dao.pojo.Product;
 import com.springboot.framework.dto.ProductDTO;
 import com.springboot.framework.service.ProductService;
+import com.springboot.framework.vo.ProductVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,13 @@ public class ProductController extends BaseController {
     public ResponseBO<Product> selectByPrimaryKey(@RequestParam Integer id) {
         return productService.selectByPrimaryKey(id);
     }
+
+//    @ACS(allowAnonymous = true)
+//    @ApiOperation(value = "查看(用户)", notes = "")
+//    @GetMapping(value = "selectByPrimaryKey")
+//    public ResponseBO<ProductVO> selectByPrimaryKey(@RequestParam Integer id) {
+//        return productService.selectByPrimaryKey(id);
+//    }
 
     @ACS(allowAnonymous = true)
     @ApiOperation(value = "查看列表", notes = "")

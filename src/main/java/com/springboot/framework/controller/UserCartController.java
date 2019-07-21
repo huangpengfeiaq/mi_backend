@@ -4,6 +4,7 @@ import com.springboot.framework.bo.PageResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.constant.Errors;
 import com.springboot.framework.controller.request.UserCartInsert;
+import com.springboot.framework.controller.request.UserCartInsertBySession;
 import com.springboot.framework.controller.request.UserCartUpdateByPrimaryKey;
 import com.springboot.framework.controller.request.UpdateByStatus;
 import com.springboot.framework.dao.pojo.UserCart;
@@ -44,6 +45,13 @@ public class UserCartController extends BaseController {
         return userCartService.insertSelective(recordDTO);
     }
 
+    @ApiOperation(value = "新增（登陆用户加入购物车）", notes = "")
+    @PostMapping(value = "insertSelectiveBySession")
+    public ResponseBO<Errors> insertSelectiveBySession(@RequestBody UserCartInsertBySession bean, HttpServletRequest request) {
+        UserCartDTO recordDTO = new UserCartDTO(super.getSessionUser(request).getId(), bean.getStyleId(), bean.getCartNumber(), super.getSessionUser(request).getName());
+        return userCartService.insertSelective(recordDTO);
+    }
+
     @ApiOperation(value = "查看", notes = "")
     @GetMapping(value = "selectByPrimaryKey")
     public ResponseBO<UserCart> selectByPrimaryKey(@RequestParam Integer id) {
@@ -54,6 +62,18 @@ public class UserCartController extends BaseController {
     @GetMapping(value = "selectList")
     public PageResponseBO selectList(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         return userCartService.selectList(pageNum, pageSize);
+    }
+
+    @ApiOperation(value = "查看列表(根据用户id)", notes = "")
+    @GetMapping(value = "selectListByUserId")
+    public PageResponseBO selectListByUserId(@RequestParam Integer userId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        return userCartService.selectListByUserId(userId, pageNum, pageSize);
+    }
+
+    @ApiOperation(value = "查看列表(根据登陆用户)", notes = "")
+    @GetMapping(value = "selectListBySession")
+    public PageResponseBO selectListBySession(@RequestParam Integer pageNum, @RequestParam Integer pageSize, HttpServletRequest request) {
+        return userCartService.selectListByUserId(super.getSessionUser(request).getId(), pageNum, pageSize);
     }
 
     @ApiOperation(value = "查看总数", notes = "")
