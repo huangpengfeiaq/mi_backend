@@ -37,7 +37,6 @@ public class FileUploadController {
      * @param file 图片
      * @param request http请求
      * @return ResponseBO<String>
-     * @throws IOException
      */
     @ACS(allowAnonymous = true)
     @ApiOperation(value = "上传图片", notes = "上传图片<br/>http://aligreen.alibaba.com/porn.html,在此检测rate超过80的为涉黄图片，会上传失败")
@@ -52,7 +51,6 @@ public class FileUploadController {
      * @param file 文件
      * @param request http请求
      * @return ResponseBO<String>
-     * @throws IOException
      */
     @ApiOperation(value = "上传图片", notes = "上传图片<br/>http://aligreen.alibaba.com/porn.html,在此检测rate超过80的为涉黄图片，会上传失败")
     @RequestMapping(value = "/uploadImageJson", method = RequestMethod.POST)
