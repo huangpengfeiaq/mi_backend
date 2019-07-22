@@ -68,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         Example example = new Example(Product.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andNotEqualTo("status", -1);
+        example.orderBy("categoryId").asc();
         example.orderBy("createDate").desc();
 
         List<Product> adminList = productMapper.selectByExample(example);
