@@ -3,10 +3,7 @@ package com.springboot.framework.controller;
 import com.springboot.framework.bo.PageResponseBO;
 import com.springboot.framework.bo.ResponseBO;
 import com.springboot.framework.constant.Errors;
-import com.springboot.framework.controller.request.UserCartInsert;
-import com.springboot.framework.controller.request.UserCartInsertBySession;
-import com.springboot.framework.controller.request.UserCartUpdateByPrimaryKey;
-import com.springboot.framework.controller.request.UpdateByStatus;
+import com.springboot.framework.controller.request.*;
 import com.springboot.framework.dao.pojo.UserCart;
 import com.springboot.framework.dto.UserCartDTO;
 import com.springboot.framework.service.UserCartService;
@@ -97,5 +94,15 @@ public class UserCartController extends BaseController {
         recordDTO.setStatus(bean.getStatus());
         recordDTO.setUpdateBy(super.getSessionUser(request).getName());
         return userCartService.updateByPrimaryKeySelective(recordDTO);
+    }
+
+    @ApiOperation(value = "更新（数量减一）", notes = "")
+    @PutMapping(value = "updateBySession")
+    public ResponseBO<Errors> updateBySession(@RequestBody UserCartUpdateBySession bean, HttpServletRequest request) {
+        UserCartDTO userCartDTO = new UserCartDTO();
+        userCartDTO.setCartId(bean.getCartId());
+        userCartDTO.setUpdateBy(super.getSessionUser(request).getName());
+        userCartDTO.setType(bean.getType());
+        return userCartService.updateBySession(userCartDTO);
     }
 }

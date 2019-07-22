@@ -52,10 +52,10 @@ public class UserCartServiceImpl implements UserCartService {
     }
 
     @Override
-    public ResponseBO<Errors> insertSelective(UserCartDTO recordDTO) {
+    public ResponseBO<Errors> insertSelective(UserCartDTO userCartDTO) {
         //1.请求校验
-        Integer styleId = recordDTO.getStyleId();
-        Integer userId = recordDTO.getUserId();
+        Integer styleId = userCartDTO.getStyleId();
+        Integer userId = userCartDTO.getUserId();
         if (userMapper.selectByPrimaryKey(userId) == null) {
             return ResponseBOUtil.fail(Errors.USER_NOT_FIND);
         }
@@ -69,12 +69,12 @@ public class UserCartServiceImpl implements UserCartService {
         userCart.setUserId(userId);
         userCart = userCartMapper.selectOne(userCart);
         if (userCart != null) {
-            if (userCartMapper.updateByCartNumber(userCart.getCartId(), recordDTO.getCartNumber()) == 0) {
+            if (userCartMapper.updateByCartNumber(userCart.getCartId(), userCartDTO.getCartNumber(), userCartDTO.getCreateBy()) == 0) {
                 return ResponseBOUtil.fail("数量增加失败");
             }
         } else {
             //分类讨论：2.不存在即新增
-            userCart = new UserCart(recordDTO);
+            userCart = new UserCart(userCartDTO);
             if (userCartMapper.insertSelective(userCart) == 0) {
                 return ResponseBOUtil.fail("添加失败");
             }
@@ -130,17 +130,31 @@ public class UserCartServiceImpl implements UserCartService {
     }
 
     @Override
-    public ResponseBO<Errors> updateByPrimaryKeySelective(UserCartDTO recordDTO) {
+    public ResponseBO<Errors> updateByPrimaryKeySelective(UserCartDTO userCartDTO) {
         //1.请求校验
 //        Errors errors = validRequest(recordDTO, "updateByPrimaryKeySelective");
 //        if (errors.code != 0) {
 //            return ResponseBOUtil.fail(errors);
 //        }
         //2.创建entity
-        UserCart admin = new UserCart(recordDTO);
+        UserCart admin = new UserCart(userCartDTO);
         //3.响应校验
         if (userCartMapper.updateByPrimaryKeySelective(admin) == 0) {
             return ResponseBOUtil.fail("更新失败");
+        }
+        return ResponseBOUtil.success(Errors.SUCCESS);
+    }
+
+    @Override
+    public ResponseBO<Errors> updateBySession(UserCartDTO userCartDTO) {
+        if (userCartDTO.getType().equals(1)) {
+            if (userCartMapper.updateBySession(userCartDTO.getCartId(), userCartDTO.getUpdateBy()) == 0) {
+                return ResponseBOUtil.fail("数量减小失败");
+            }
+        } else {
+            if (userCartMapper.updateByCartNumber(userCartDTO.getCartId(), 1, userCartDTO.getUpdateBy()) == 0) {
+                return ResponseBOUtil.fail("数量增加失败");
+            }
         }
         return ResponseBOUtil.success(Errors.SUCCESS);
     }

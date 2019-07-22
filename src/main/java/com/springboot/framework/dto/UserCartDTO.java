@@ -32,6 +32,10 @@ public class UserCartDTO {
     private String updateBy;
     private Date updateDate;
     private Byte status;
+    /**
+     * 增加或减少（1-减少，2-增加）
+     */
+    private Integer type;
 
     public UserCartDTO() {
     }

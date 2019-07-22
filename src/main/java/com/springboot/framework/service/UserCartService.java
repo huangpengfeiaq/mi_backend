@@ -69,4 +69,12 @@ public interface UserCartService {
      * @return ResponseBO<Errors>
      */
     ResponseBO<Errors> updateByPrimaryKeySelective(UserCartDTO userCartDTO);
+
+    /**
+     * 更新(数量)
+     *
+     * @param userCartDTO 用户购物车传输对象
+     * @return ResponseBO<Errors>
+     */
+    ResponseBO<Errors> updateBySession(UserCartDTO userCartDTO);
 }
