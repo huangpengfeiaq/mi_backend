@@ -8,6 +8,7 @@ import com.springboot.framework.dao.pojo.Admin;
 import com.springboot.framework.dao.mapper.AdminMapper;
 import com.springboot.framework.dto.AdminDTO;
 import com.springboot.framework.service.AdminService;
+import com.springboot.framework.service.BaseService;
 import com.springboot.framework.util.*;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -15,8 +16,11 @@ import tk.mybatis.mapper.entity.Example;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author huangpengfei
+ */
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl implements BaseService<Admin, AdminDTO> {
     @Resource
     private AdminMapper adminMapper;
 
@@ -49,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
         return ResponseBOUtil.success(Errors.SUCCESS);
     }
 
-    @Override
+//    @Override
     public ResponseBO<Admin> login(AdminDTO recordDTO) {
         //1.请求校验
         Errors errors = validRequest(recordDTO, "login");
@@ -86,7 +90,7 @@ public class AdminServiceImpl implements AdminService {
         return PageUtil.page(adminList);
     }
 
-    @Override
+//    @Override
     public PageResponseBO selectListByPhone(String phone, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
 
@@ -126,7 +130,7 @@ public class AdminServiceImpl implements AdminService {
         return ResponseBOUtil.success(Errors.SUCCESS);
     }
 
-    @Override
+//    @Override
     public ResponseBO<Errors> updateByPassword(Integer id, String oldPassword, String newPassword, String updateBy) {
         int updateCount = adminMapper.updateByPassword(id, MD5Util.MD5(oldPassword), MD5Util.MD5(newPassword), updateBy);
         if (updateCount == 0) {

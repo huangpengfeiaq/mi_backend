@@ -7,6 +7,7 @@ import com.springboot.framework.constant.Errors;
 import com.springboot.framework.dao.mapper.OrderMapper;
 import com.springboot.framework.dao.pojo.Order;
 import com.springboot.framework.dto.OrderDTO;
+import com.springboot.framework.service.BaseService;
 import com.springboot.framework.service.OrderService;
 import com.springboot.framework.util.PageUtil;
 import com.springboot.framework.util.ResponseBOUtil;
@@ -22,7 +23,7 @@ import java.util.List;
  * @date 2019/7/9 12:24
  */
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements BaseService<Order, OrderDTO> {
     @Resource
     private OrderMapper orderMapper;
     
